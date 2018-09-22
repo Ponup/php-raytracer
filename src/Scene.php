@@ -13,14 +13,32 @@ class Scene {
 	public $fov;
 
 	/**
- 	 * @var Sphere
+ 	 * @var array
  	 */
-	public $sphere;
+	public $elements;
 
-	public function __construct(Dimension $dimension, float $fov, Sphere $sphere) {
+	/**
+ 	 * @var Light
+ 	 */
+	public $light;
+
+	public function __construct(Dimension $dimension, float $fov, array $elements) {
 		$this->dimension = $dimension;
 		$this->fov = $fov;
-		$this->sphere = $sphere;
+		$this->elements = $elements;
+	}
+
+	public function trace(Ray $ray, &$distance) {
+		$closestElement = null;
+		$distance = PHP_INT_MAX;
+		foreach($this->elements as $element) {
+			$intersection = $element->intersect($ray);
+			if($intersection !== null && $intersection < $distance) {
+				$distance = $intersection;
+				$closestElement = $element;
+			}
+		}
+		return $closestElement;
 	}
 }
 

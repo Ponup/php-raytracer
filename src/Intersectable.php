@@ -2,6 +2,6 @@
 
 interface Intersectable {
 
-	public function intersect(Ray $ray) : bool;
+	public function intersect(Ray $ray);
 }
 

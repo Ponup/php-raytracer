@@ -13,8 +13,11 @@ class Renderer {
 		for($x = 0; $x < $scene->dimension->w; $x++) {
 			for($y = 0; $y < $scene->dimension->h; $y++) {
 				$ray = Ray::createPrime($x, $y, $scene);
-				if($scene->sphere->intersect($ray)) {
-					imagesetpixel($im, $x, $y, $scene->sphere->color->allocate($im));
+				$distance = null;
+				$element = $scene->trace($ray, $distance);
+				if(null !== $element && $element->intersect($ray)) {
+					$color = $this->getColor($scene, $ray, $element, $distance);
+					imagesetpixel($im, $x, $y, $color->allocate($im));
 				} else {
 					imagesetpixel($im, $x, $y, $blackColor);
 				}
@@ -22,6 +25,17 @@ class Renderer {
 		}
 
 		imagepng($im, $path);
+	}
+
+	private function getColor($scene, $ray, $element, $distance) : RgbColor {
+		$hitPoint = $ray->origin->add($ray->direction->scale($distance));
+		$surfaceNormal = $element->surfaceNormal($hitPoint);
+		$directionToLight = $scene->light->direction->normalize()->negate();
+		$lightPower = ($surfaceNormal->dot($directionToLight) * $scene->light->intensity);
+		$lightReflected = $element->albedo / M_PI;
+		$color = $element->color->times($scene->light->color)->timesNum($lightPower)->timesNum($lightReflected);
+		$clampedColor = $color->clamp();
+		return $clampedColor;
 	}
 }
 
