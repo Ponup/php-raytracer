@@ -8,9 +8,16 @@ Ray tracer written in PHP using the GD library. This was inspired by an [article
 
 ![Ray traced scene](scene.png)
 
+## Requirements
+
+* PHP 8.1
+* GD extension
+* Composer
+
 ## Usage
 
-```sh
-$ php main.php
+```shell
+composer install
+php main.php
 ```
 

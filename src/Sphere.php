@@ -1,42 +1,46 @@
 <?php
 
-use glm\vec3;
+declare(strict_types=1);
 
-class Sphere implements Intersectable {
+use Mammoth\Graphic\Color;
+use Mammoth\Math\Vector;
+
+class Sphere implements Intersectable
+{
 
 	/**
- 	 * @var \glm\vec3
- 	 */
+	 * @var \Mammoth\Math\Vector
+	 */
 	public $center;
 
 	/**
- 	 * @var float
- 	 */
+	 * @var float
+	 */
 	public $radius;
 
 	/**
- 	 * @var RgbColor
- 	 */
+	 * @var Color
+	 */
 	public $color;
 
 	/**
- 	 * @var float
- 	 */
+	 * @var float
+	 */
 	public $albedo;
 
-	public function __construct(\glm\vec3 $center, float $radius, RgbColor $color, float $albedo) {
+	public function __construct(Vector $center, float $radius, Color $color, float $albedo)
+	{
 		$this->center = $center;
 		$this->radius = $radius;
 		$this->color = $color;
 		$this->albedo = $albedo;
 	}
-	
+
 	/**
- 	 * The basic idea behind this test is that we construct a right-triangle using the prime ray as the adjacent side and the line between the origin and the center of the sphere as the hypotenuse. Then we calculate the length of the opposite side using the Pythagorean Theorem - if that side is smaller than the radius of the sphere, the ray must intersect the sphere. In practice, we actually do the check on length-squared values because square roots are expensive to calculate, but it’s the same idea.
- 	 *
- 	 * @return boolean
- 	 */
-	public function intersect(Ray $ray) {
+	 * The basic idea behind this test is that we construct a right-triangle using the prime ray as the adjacent side and the line between the origin and the center of the sphere as the hypotenuse. Then we calculate the length of the opposite side using the Pythagorean Theorem - if that side is smaller than the radius of the sphere, the ray must intersect the sphere. In practice, we actually do the check on length-squared values because square roots are expensive to calculate, but it’s the same idea.
+	 */
+	public function intersect(Ray $ray): ?float
+	{
 		// Create a line segment between the ray origin and the center of the sphere
 		$hypo = $this->center->substract($ray->origin);
 		// Use it as a hypotenuse and find the length of the adjacent side
@@ -46,14 +50,14 @@ class Sphere implements Intersectable {
 		$opp = $hypo->dot($hypo) - ($adj * $adj);
 		$radiusSquared = ($this->radius * $this->radius);
 		// If that length-squared is less than radius squared, the ray intersects the sphere
-		if($opp > $radiusSquared) {
+		if ($opp > $radiusSquared) {
 			return null;
 		}
 		$thickness = sqrt($radiusSquared - $opp);
 		$t0 = $adj - $thickness;
 		$t1 = $adj + $thickness;
 
-		if($t0 < 0.0 && $t1 < 0.0) {
+		if ($t0 < 0.0 && $t1 < 0.0) {
 			return null;
 		}
 
@@ -61,8 +65,8 @@ class Sphere implements Intersectable {
 		return $distance;
 	}
 
-	public function surfaceNormal(vec3 $hitPoint) {
+	public function surfaceNormal(Vector $hitPoint): Vector
+	{
 		return $hitPoint->substract($this->center)->normalize();
 	}
 }
-

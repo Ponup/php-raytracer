@@ -1,7 +1,9 @@
 <?php
 
-interface Intersectable {
+declare(strict_types=1);
 
-	public function intersect(Ray $ray);
+interface Intersectable
+{
+
+	public function intersect(Ray $ray): ?float;
 }
-

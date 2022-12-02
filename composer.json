@@ -1,6 +1,6 @@
 {
 	"require": {
-		"ponup/glm": "~1.0.0"
+    	"ponup/mammoth": "@dev"
 	},
 	"autoload": {
 		"psr-4": {

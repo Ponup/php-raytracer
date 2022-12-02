@@ -1,28 +1,32 @@
 <?php
 
-use glm\vec3;
+declare(strict_types=1);
 
-class Light {
+use Mammoth\Graphic\Color;
+use Mammoth\Math\Vector;
+
+class Light
+{
 
 	/**
- 	 * @var vec3
- 	 */
+	 * @var \Mammoth\Math\Vector
+	 */
 	public $direction;
 
 	/**
- 	 * @var RgbColor
- 	 */
+	 * @var \Mammoth\Graphic\Color
+	 */
 	public $color;
 
 	/**
- 	 * @var float
- 	 */
+	 * @var float
+	 */
 	public $intensity;
 
-	public function __construct(vec3 $direction, RgbColor $color, float $intensity) {
+	public function __construct(Vector $direction, Color $color, float $intensity)
+	{
 		$this->direction = $direction;
 		$this->color = $color;
 		$this->intensity = $intensity;
 	}
 }
-

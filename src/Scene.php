@@ -1,39 +1,43 @@
 <?php
 
-class Scene {
+use Mammoth\Graphic\Dimension;
+
+class Scene
+{
 
 	/**
- 	 * @var Dimension
- 	 */
+	 * @var Dimension
+	 */
 	public $dimension;
 
 	/**
- 	 * @var float Field of view
- 	 */
+	 * @var float Field of view
+	 */
 	public $fov;
 
 	/**
- 	 * @var array
- 	 */
+	 * @var array
+	 */
 	public $elements;
 
 	/**
- 	 * @var Light
- 	 */
+	 * @var Light
+	 */
 	public $light;
 
-	public function __construct(Dimension $dimension, float $fov, array $elements) {
+	public function __construct(Dimension $dimension, float $fov, array $elements)
+	{
 		$this->dimension = $dimension;
 		$this->fov = $fov;
 		$this->elements = $elements;
 	}
 
-	public function trace(Ray $ray, &$distance) {
+	public function trace(Ray $ray, float &$distance): ?Intersectable
+	{
 		$closestElement = null;
-		$distance = PHP_INT_MAX;
-		foreach($this->elements as $element) {
+		foreach ($this->elements as $element) {
 			$intersection = $element->intersect($ray);
-			if($intersection !== null && $intersection < $distance) {
+			if ($intersection !== null && $intersection < $distance) {
 				$distance = $intersection;
 				$closestElement = $element;
 			}
@@ -41,4 +45,3 @@ class Scene {
 		return $closestElement;
 	}
 }
-
